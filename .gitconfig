@@ -1,0 +1,11 @@
+# ~/.gitconfig: user specific git-config(1) file.
+
+[core]
+editor  = "nano"
+
+[push]
+default = "simple"
+
+[user]
+name    = "Richard Fussenegger"
+email   = "richard@fussenegger.info"
