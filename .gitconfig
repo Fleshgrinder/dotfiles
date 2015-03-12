@@ -3,6 +3,9 @@
 [core]
 editor  = "nano"
 
+[http]
+postBuffer = 524288000
+
 [push]
 default = "simple"
 
