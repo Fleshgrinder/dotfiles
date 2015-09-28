@@ -1,3 +1,7 @@
+# Global Gitignore Configuration
+#
+# @see http://git-scm.com/docs/gitignore
+
 .ssh
 .*_history
 .rnd

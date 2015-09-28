@@ -1,0 +1,31 @@
+# Global Editor Configuration
+#
+# This file is provided to ease adoption of the used code style guide and auto-configure the editor for special use
+# cases where some file formats and their respective software require special handling.
+#
+# @see http://editorconfig.org/
+
+# Special instruction for main configuration file within a project.
+root                        = true
+
+# Default configuration for all kinds of files.
+[*]
+charset                     = UTF-8
+end_of_line                 = LF
+indent_size                 = 4
+indent_style                = space
+insert_final_newline        = true
+tab_width                   = 8
+trim_trailing_whitespace    = true
+
+# Configuration for files that usually use Windows line endings.
+#
+# It is recommended to use `chcp 65001` at the beginning of batch files to change the encoding to UTF-8. However, this
+# requires the usage of a font that contains all necessary glyphs (e.g. Lucida Console).
+[{*.bat,*.ps1,*.vb}]
+end_of_line                 = CRLF
+
+# Configuration for files that require tabs.
+[{*.go,{m,M}akefile}]
+indent_style                = tab
+tab_width                   = 4

@@ -1,14 +1,36 @@
-# ~/.gitconfig: user specific git-config(1) file.
+# ~/.gitconfig
+#
+# User specific git-config file, best viewed with `.ini` syntax highlighting.
+#
+# @see http://git-scm.com/docs/git-config
 
 [core]
-editor  = "nano"
+autocrlf    = false
+editor      = nano
+#excludefile = C:\\Users\\Fleshgrinder\\.gitignore
+excludefile = ~/.gitignore
+
+[filter "lfs"]
+clean       = git-lfs clean %f
+smudge      = git-lfs smudge %f
+required    = true
+
+[gitflow "prefix"]
+feature     = feature-
+release     = release-
+hotfix      = hotfix-
+support     = support-
+versiontag  = v
+
+[github]
+user        = Fleshgrinder
 
 [http]
-postBuffer = 524288000
+postBuffer  = 524288000
 
 [push]
-default = "simple"
+default     = simple
 
 [user]
-name    = "Richard Fussenegger"
-email   = "richard@fussenegger.info"
+name        = Richard Fussenegger
+email       = fleshgrinder@users.noreply.github.com
