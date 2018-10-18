@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+set -eu
+
+# http://docopt.org/
+usage() {
+    cat << EOT
+Pull latest changes and delete outdated branches.
+
+Usage: git-update [options...]
+
+Options:
+  -c, --cleanup  perform garbage collection and try to reclaim space
+  -d, --dry-run  show what would be done, without making any changes
+  -h, --help     show this help and exit
+
+EOT
+    exit $1
+}
+
+cleanup=false
+dry_run=
+
+while (( $# > 0 )); do
+    case "$1" in
+        -c|--cleanup)
+            cleanup=true
+            shift 1
+            ;;
+        -d|--dry-run)
+            dry_run=--dry-run
+            shift 1
+            ;;
+        -h|--help)
+            usage 0
+            ;;
+        *)
+            shift 1
+            ;;
+    esac
+done
+
+git fetch "${dry_run}" --prune --prune-tags
+
+branches=()
+for branch in $(git branch -vv | grep ': gone]' | awk '{print $$1}'); do
+    branches+=("${branch}")
+done
+
+if (( ${#branches[@]} )); then
+    if [[ "${dry_run}" == '' ]]; then
+        git branch -D "${branches[@]}"
+    else
+        printf 'The following branches would be deleted:\n'
+        printf '%s\n' "${branches[@]}"
+    fi
+fi
+
+if git symbolic-ref --quiet HEAD; then
+    git pull "${dry_run}" --prune
+fi
+
+if [[ "${cleanup}" == true ]]; then
+    git gc --prune
+    git repack -Ad
+    git prune "${dry_run}"
+fi

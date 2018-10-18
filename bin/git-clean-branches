@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+set -eu
+
+# http://docopt.org/
+usage() {
+    cat << EOT
+Clean local branches except for master.
+
+Usage: git-clean-branches [options...]
+
+Options:
+  -d, --dry-run                 only print what would be cleaned
+  -m, --merged                  only clean those branches that were merged into HEAD
+  -i <branch>, --into <branch>  only clean those branches that were merged into <branch>
+  -h, --help                    show this help and exit
+
+EOT
+    exit $1
+}
+
+args=()
+dry_run=false
+
+while (( $# > 0 )); do
+    case "$1" in
+        -d|--dry-run)
+            dry_run=true
+            shift 1
+            ;;
+        -h|--help)
+            usage 0
+            ;;
+        -m|--merged)
+            args+=(--merged HEAD)
+            shift 1
+            ;;
+        -i|--into)
+            args+=(--merged)
+            if (( $# > 0 )); then
+                args+=("$2")
+            else
+                usage 1 >&2
+            fi
+            shift 2
+            ;;
+        *)
+            shift 1
+            ;;
+    esac
+done
+
+readonly args dry_run
+
+branches=()
+for branch in $(git for-each-ref --format '%(refname:short)' "${args[@]}" refs/heads/); do
+    if [[ "${branch}" != master ]]; then
+        branches+=("${branch}")
+    fi
+done
+
+if (( ${#branches[@]} )); then
+    if [[ "${dry_run}" == true ]]; then
+        printf '%s\n' "${branches[@]}"
+    else
+        git branch -D "${branches[@]}"
+    fi
+fi

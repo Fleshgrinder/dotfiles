@@ -5,32 +5,31 @@
 # @see http://git-scm.com/docs/git-config
 
 [core]
-autocrlf    = false
-editor      = nano
-#excludefile = C:\\Users\\Fleshgrinder\\.gitignore
-excludefile = ~/.gitignore
+attributesFile  = ~/.gitattributes
+autocrlf        = input
+editor          = ~/scoop/apps/notepad2-mod/current/Notepad2.exe
+eol             = lf
+excludesFile    = ~/.gitignore
+fscache         = true
+ignoreCase      = true
+preloadIndex    = true
+symlinks        = true
 
-[filter "lfs"]
-clean       = git-lfs clean %f
-smudge      = git-lfs smudge %f
-required    = true
+[fetch]
+prune           = true
 
-[gitflow "prefix"]
-feature     = feature-
-release     = release-
-hotfix      = hotfix-
-support     = support-
-versiontag  = v
+[remote "origin"]
+prune           = true
 
-[github]
-user        = Fleshgrinder
-
-[http]
-postBuffer  = 524288000
+[remote "upstream"]
+prune           = true
 
 [push]
-default     = simple
+default         = current
 
 [user]
-name        = Richard Fussenegger
-email       = fleshgrinder@users.noreply.github.com
+name            = Richard Fussenegger
+email           = fleshgrinder@users.noreply.github.com
+
+[github]
+user            = Fleshgrinder
