@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+for arg in "$@"; do
+    case "$arg" in
+    -h | --help)
+        cat <<USAGE
+Create a global environment variable.
+
+Usage:
+  setenv <name> <value>...
+  setenv -h | --help
+
+Options:
+  -h --help  display this help and exit
+USAGE
+        exit 0
+        ;;
+    esac
+done
+
+name=${1:?missing required environment variable name}
+shift
+value=${*:?missing required environment variable value}
+echo "$name='$value'" >"$HOME/dotfiles/env/$name"
+reload-shell || echo 'reload your shell'

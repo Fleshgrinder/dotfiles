@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+if [[ ! -d ~/.stderred ]]; then
+    git clone https://github.com/sickill/stderred.git ~/.stderred
+    make -C ~/.stderred
+    # shellcheck disable=SC2016
+    setalias stderred 'LD_PRELOAD=~/build/libstderred.so${LD_PRELOAD:+:$LD_PRELOAD}'
+fi

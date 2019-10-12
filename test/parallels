@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# http://osxdaily.com/2017/04/11/run-macos-virtual-machine-easy-parallels/
+brew cask install parallels
+
+cat <<HELP
+Start Parallels Desktop and follow the on-screen instructions.
+You can install MacOS from the recovery partition, no need to organize an installer.
+HELP

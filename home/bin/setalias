@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+for arg in "$@"; do
+    case "$arg" in
+    -h | --help)
+        cat <<USAGE
+Create global alias.
+
+Usage:
+  setalias <name> <value>
+  setalias -h | --help
+
+Options:
+  -h --help  display this help and exit
+USAGE
+        exit 0
+        ;;
+    esac
+done
+
+name=${1:?missing requried alias name}
+shift
+value=${*:?missing required alias value}
+alias="alias $name=$value"
+
+if ! bash -c "$alias" &>/dev/null; then
+    echo "Alias creation failed: $alias" >&2
+    exit 1
+fi
+
+echo "$alias" >"$HOME/dotfiles/env/$name"
+reload-shell || echo 'reload your shell'

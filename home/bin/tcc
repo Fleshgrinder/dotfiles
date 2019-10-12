@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+for arg in "$@"; do
+    if [[ "$arg" == -h || "$arg" == --help ]]; then
+        r='\033[0m'
+        g='\033[0;32m'
+        y='\033[0;33m'
+        echo -e "Transform all words to 'Title Case'
+
+${y}Usage:$r
+$g  tcc$r
+$g  tcc <word>...$r
+$g  tcc -h | --help$r
+
+${y}Examples:$r
+  $ tcc foo bar
+  Foo Bar
+
+  The script reads from STDIN if no arguments are given:
+
+  $ tcc <<<'foo bar'
+  Foo Bar"
+        exit 0
+    fi
+done
+
+if (($# == 0)); then
+    words=$(cat /dev/stdin)
+else
+    words=$*
+fi
+
+read -r -a lower_cased <<<"${words,,}"
+echo "${lower_cased[@]^}"

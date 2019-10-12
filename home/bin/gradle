@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+JAVA_HOME=$(jenv javahome)
+export JAVA_HOME
+
+if [[ -f gradlew ]]; then
+    exec ./gradlew "$@"
+else
+    readonly project_dir=$PWD
+
+    while [[ ! -f gradlew && "$PWD" != / ]]; do
+        cd ..
+    done
+
+    if [[ -f gradlew ]]; then
+        exec ./gradlew --project-dir="$project_dir" "$@"
+    else
+        exec /usr/local/opt/bin/gradle "$@"
+    fi
+fi

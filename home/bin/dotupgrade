@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+(
+    cd "$(brew --repo)"
+    git fetch --quiet
+    git reset --quiet --hard origin/master
+    brew update
+)
+
+update() {
+    if command -v "$1" &>/dev/null; then
+        "$@"
+    fi
+}
+
+brew upgrade
+brew cask upgrade
+brew cleanup
+
+update nvim +PlugUpgrade +PlugUpdate +PlugClean +qall
