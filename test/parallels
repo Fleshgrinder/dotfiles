@@ -7,4 +7,7 @@ brew cask install parallels
 cat <<HELP
 Start Parallels Desktop and follow the on-screen instructions.
 You can install MacOS from the recovery partition, no need to organize an installer.
+Once started open the Terminal and start the installer:
+
+    bash <(curl -fqsSL https://raw.githubusercontent.com/Fleshgrinder/dotfiles/mac/install)
 HELP

@@ -1,26 +1,67 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-for arg in "$@"; do
-    case "$arg" in
-    -h | --help)
-        cat <<USAGE
+usage() {
+    cat <<USAGE
 Create a global environment variable.
 
 Usage:
-  setenv <name> <value>...
+  setenv [option]... <name> <value>...
   setenv -h | --help
 
 Options:
-  -h --help  display this help and exit
+  -f --force        overwrite existing environment variable
+  -h --help         display this help and exit
+  -i --interactive  ask if existing should be overwritten
+  -n --no-fail      do not fail if the variable already exists and continue
+                    silently (overrules --force)
 USAGE
+}
+
+fail=true
+force=false
+interactive=false
+for arg in "$@"; do
+    case "$arg" in
+    -f | --force)
+        force=true
+        ;;
+    -h | --help)
+        usage
         exit 0
+        ;;
+    -i | --interactive)
+        interactive=true
+        ;;
+    -n | --no-fail)
+        fail=true
         ;;
     esac
 done
 
-name=${1:?missing required environment variable name}
+if (($# < 1)); then
+    echo -e 'Missing required environment variable name.\n' >&2
+    usage >&2
+    exit 1
+fi
+name=$1
 shift
-value=${*:?missing required environment variable value}
-echo "$name='$value'" >"$HOME/dotfiles/env/$name"
-reload-shell || echo 'reload your shell'
+
+target="$HOME/dotfiles/env/$name.sh"
+if [[ -f "$target" ]]; then
+    if [[ $interactive == true ]]; then
+        read -rn1 -p"Overwrite existing $name=${!$name} variable? [yn] "
+        echo
+        if [[ $REPLY != y && $REPLY != Y ]]; then
+            exit 0
+        fi
+    elif [[ $fail == false ]]; then
+        exit 0
+    elif [[ $force == false ]]; then
+        echo "$name already exists, use the --force" >&2
+        exit 1
+    fi
+fi
+
+echo "$name='$*'" >"$target"
+reload-shell

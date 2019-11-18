@@ -18,8 +18,4 @@ else
     prompt_context() { :; }
 fi
 
-alias zshrc='editor ~/.zshrc'
-alias zshplugins='editor ~/.zshplugins'
-alias reload-shell='source ~/.zshrc'
-
 source ~/dotfiles/*/*

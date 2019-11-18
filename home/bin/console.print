@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+if (($# > 0)); then
+    data=$*
+else
+    content=
+    while read -r line; do
+        content="$content$line"$'\n'
+    done
+    content="$content$line" # capture any content after the last newline
+    printf -v data '%s' "$content"
+fi
+
+if [[ -v NO_COLOR ]]; then
+    for element in b i info comment error path; do
+        data=${data//<$element>/}
+        data=${data//<\/$element>/}
+    done
+    data=${data//<href=*>/}
+    data=${data//<\/>/}
+else
+    # bold
+    data=${data//<b>/\\e[1m}
+    data=${data//<\/b>/\\e[22m}
+
+    # italic
+    data=${data//<i>/\\e[3m}
+    data=${data//<\/i>/\\e[23m}
+
+    # underline
+    data=${data//<u>/\\e[4m}
+    data=${data//<\/u>/\\e[24m}
+
+    # green text
+    data=${data//<info>/\\e[32m}
+    data=${data//<\/info>/\\e[39m}
+
+    # yellow text
+    data=${data//<comment>/\\e[33m}
+    data=${data//<\/comment>/\\e[39m}
+
+    # white text on red background
+    data=${data//<error>/\\e[37;41m}
+    data=${data//<\/error>/\\e[0m}
+
+    # magenta text
+    data=${data//<path>/\\e[35m}
+    data=${data//<\/path>/\\e[39m}
+
+    # https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda
+    data=$(sed 's/<href=\(.*\)>\(.*\)<\/>/\\e[34m\\e]8;;\1\\e\\\\\2\\e]8;;\\e\\\\\\033[39m/' <<<"$data")
+fi
+
+printf '%b' "$data"

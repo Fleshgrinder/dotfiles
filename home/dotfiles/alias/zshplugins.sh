@@ -1,0 +1,1 @@
+alias zshplugins='editor ~/.zshplugins'
