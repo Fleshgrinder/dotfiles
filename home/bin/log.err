@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-set -Eeuo pipefail
-
-console.println "<red>[ERROR]</red> $*" >&2

@@ -1,0 +1,1 @@
+alias github-user-open='open "https://github.com/$GITHUB_USER/$(basename "$PWD")"'

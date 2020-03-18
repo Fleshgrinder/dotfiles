@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+function usage() {
+    cat <<EOT
+Clean local branches except for master and the current one.
+Usage: git-clean-branches [options...]
+Options:
+  -d --dry-run        only print what would be cleaned
+  -h --help           show this help and exit
+  -i --into <branch>  only clean those branches that were merged into <branch>
+  -m --merged         only clean those branches that were merged into HEAD
+EOT
+    exit "$1"
+}
+
+args=()
+dry_run=false
+
+while (($# > 0)); do
+    case "$1" in
+    -d | --dry-run)
+        dry_run=true
+        ;;
+    -h | --help)
+        usage 0
+        ;;
+    -m | --merged)
+        args+=(--merged HEAD)
+        ;;
+    -i | --into)
+        args+=(--merged)
+        if (($# > 0)); then
+            args+=("$2")
+        else
+            usage 1 >&2
+        fi
+        shift
+        ;;
+    *) ;;
+    esac
+    shift
+done
+
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+readonly args current_branch dry_run
+
+branches=()
+for branch in $(git for-each-ref --format '%(refname:short)' "${args[@]}" refs/heads/); do
+    if [[ "$branch" != master && "$branch" != "$current_branch" ]]; then
+        branches+=("$branch")
+    fi
+done
+
+if ((${#branches[@]})); then
+    if [[ $dry_run == true ]]; then
+        printf '%s\n' "${branches[@]}"
+    else
+        git branch -D "${branches[@]}"
+    fi
+fi

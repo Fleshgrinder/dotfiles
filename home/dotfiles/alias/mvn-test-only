@@ -1,0 +1,1 @@
+alias mvn-test-only='mvn surefire:test -Dsurefire.skipAfterFailureCount=1'

@@ -1,0 +1,1 @@
+alias github-user='cd "$GITHUB_USER_DIR"'

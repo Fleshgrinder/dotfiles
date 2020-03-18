@@ -1,0 +1,38 @@
+# https://git-scm.com/docs/git-config
+
+[commit]
+    gpgSign         = true
+
+[core]
+    attributesFile  = ~/.gitattributes
+    autocrlf        = input
+    eol             = lf
+    excludesFile    = ~/.gitignore
+    ignoreCase      = false
+
+[credentials]
+    helper          = osxkeychain
+
+[fetch]
+    prune           = true
+
+[init]
+    templateDir     = ~/.git-templates
+
+[push]
+    default         = current
+
+[remote "origin"]
+    prune           = true
+
+[remote "upstream"]
+    prune           = true
+
+[tag]
+    gpgSign         = true
+
+[user]
+    name            = Fleshgrinder
+    email           = fleshgrinder@users.noreply.github.com
+    organization    = n26
+    signingKey      = 989997CA97D703B6

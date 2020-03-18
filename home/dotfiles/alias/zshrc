@@ -1,0 +1,1 @@
+alias zshrc='editor ~/.zshrc && reload-shell'

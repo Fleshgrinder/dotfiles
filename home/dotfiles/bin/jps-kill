@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+exec jps | grep "$1" | cut -d' ' -f1 | xargs -r kill

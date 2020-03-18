@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+usage() {
+    cat <<USAGE
+Create global shortcut for the current directory.
+
+Usage:
+  shortcut [<name>]
+  shortcut -h | --help
+
+Options:
+  -h --help  display this help and exit
+
+Examples:
+  $ cd some/directory && shortcut
+  alias directory='cd /absolute/path/to/some/directory'
+
+  $ cd some/directory && shortcut foo
+  alias foo='cd /absolute/path/to/some/directory'
+USAGE
+}
+
+for arg in "$@"; do
+    case "$arg" in
+    -h | --help)
+        usage
+        exit 0
+        ;;
+    esac
+done
+
+if ! setalias "${1:-$(basename "$PWD")}" "cd '$PWD'"; then
+    usage
+    exit 1
+fi

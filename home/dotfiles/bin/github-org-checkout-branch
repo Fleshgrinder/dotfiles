@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+if (($# != 1)); then
+    echo 'Missing required ticket or issue URL.' >&2
+    exit 64
+fi
+
+if [[ "$1" =~ ^https ]]; then
+    ticket=${1##*/}
+else
+    ticket=$1
+fi
+
+if ! summary=$(curl -fqsSLu "$ATLASSIAN_USERNAME:$ATLASSIAN_TOKEN" "https://number26-jira.atlassian.net/rest/api/latest/issue/$ticket" | jq -r .fields.summary); then
+    echo "Request failed, are you sure https://number26-jira.atlassian.net/browse/$ticket exists?" >&2
+    exit 1
+fi
+
+# lowercase
+summary=${summary,,}
+
+# dashify
+summary=${summary// /-}
+summary=${summary//$'\t'/-}
+
+exec git checkout -b "$ticket-$summary"

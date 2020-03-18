@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# https://github.com/pstadler/keybase-gpg-github
+
+info() { echo -e "\033[0;32m$*\033[0m" >&2; }
+comment() { echo -e "\033[0;33m$*\033[0m" >&2; }
+error() { echo -e "\033[37;41m$*\033[0m" >&2; }
+
+if (($# != 1)); then
+    error 'Missing required key ID'
+    # shellcheck disable=SC2016
+    info 'Use `keybase gpg export` to list available keys and retrieve the key ID from'
+    exit 1
+fi
+
+for cmd in git gpg keybase pinentry-mac; do
+    if ! command -v "$cmd" &>/dev/null; then
+        error "Could not find $cmd in your PATH, make sure it is available."
+        exit 1
+    fi
+done
+
+# shellcheck disable=SC2016
+setenv GPG_TTY '"$TTY"'
+export GPG_TTY="$TTY"
+
+keybase pgp export -q "$1" | gpg --import
+keybase gpg export -q "$1" --secret | gpg --allow-secret-key-import --import
+
+(
+    # https://infosec.mozilla.org/guidelines/key_management
+    cd ~/.gnupg
+
+    echo 'personal-digest-preferences SHA512 SHA384
+cert-digest-algo SHA256
+default-preference-list SHA512 SHA384 AES256 ZLIB BZIP2 ZIP Uncompressed
+keyid-format 0xlong' >gpg.conf
+
+    echo "pinentry-program $(command -v pinentry-mac)
+default-cache-ttl 14400
+max-cache-ttl 86400" >gpg-agent.conf
+
+    gpgconf --kill gpg-agent
+)
+
+git config --global commit.gpgSign true
+git config --global tag.gpgSign true
+git config --global user.signingKey "$1"

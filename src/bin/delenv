@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+for env in "$@"; do
+    rm -f "$HOME/dotfiles/env/$env"
+done

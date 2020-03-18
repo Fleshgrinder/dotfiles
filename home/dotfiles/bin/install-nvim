@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+mkdir -p ~/.config/nvim
+git clone https://github.com/Fleshgrinder/nvim.git ~/.config/nvim
+
+ln -fs ~/config/nvim/init.vim ~/.vimrc
+
+nvim +PlugInstall +qall

@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-if [[ ! -d ~/.nvim ]]; then
-    git clone --branch master --quiet --single-branch https://github.com/Fleshgrinder/nvim.git ~/.nvim
-    nvim +PlugInstall +qall
-    ln -is .nvim/init.vim .vimrc
-    setenv EDITOR nvim
-fi
+dir=~/.config/nvim
+mkdir -p "$dir"
+git clone https://github.com/Fleshgrinder/nvim.git "$dir"
+ln -fs "$dir/init.vim" ~/.vimrc
+nvim +PlugInstall +qall

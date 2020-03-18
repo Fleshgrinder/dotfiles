@@ -1,0 +1,1 @@
+alias gpr='hub pull-request --assign $GITHUB_USER --browse --no-edit --push'

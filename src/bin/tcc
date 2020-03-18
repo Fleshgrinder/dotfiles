@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+usage() {
+    cat <<USAGE
+Transform all words to ‘Title Case’.
+
+Usage:
+  tcc
+  tcc <word>…
+  tcc -h | --help
+USAGE
+}
+
+for arg in "$@"; do
+    case "$arg" in
+    -h | --help)
+        usage
+        exit 0
+        ;;
+    esac
+done
+
+if (($# == 0)); then
+    words=$(cat /dev/stdin)
+else
+    words=$*
+fi
+
+read -r -a lower_cased <<<"${words,,}"
+echo "${lower_cased[@]^}"

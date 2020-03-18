@@ -1,0 +1,1 @@
+alias mvn-list-dependencies='mvn com.ning.maven.plugins:maven-dependency-versions-check-plugin:list'

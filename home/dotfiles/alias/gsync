@@ -1,0 +1,1 @@
+alias gsync='git fetch upstream master && git rebase upstream/master && git push'

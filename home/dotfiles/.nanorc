@@ -1,0 +1,6 @@
+include ~/.config/nanorc/*.nanorc
+
+set linenumbers
+set smooth
+set tabsize 4
+set tabstospaces

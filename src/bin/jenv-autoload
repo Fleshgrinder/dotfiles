@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+mkdir -p ~/.jenv/versions
+for j in /Library/Java/JavaVirtualMachines/*/Contents/Home
+do jenv add "$j"
+done

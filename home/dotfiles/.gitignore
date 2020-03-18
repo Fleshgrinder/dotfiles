@@ -1,0 +1,19 @@
+# Custom
+.fleshgrinder/
+
+# Mac
+.DS_Store
+
+# IntelliJ
+.idea/
+out/
+*.iml
+*.ipr
+*.iws
+
+# Gradle
+.gradle/
+build/
+
+# Maven
+target/

@@ -1,0 +1,1 @@
+alias l='gls --almost-all --color=auto --classify --group-directories-first --human-readable -l'

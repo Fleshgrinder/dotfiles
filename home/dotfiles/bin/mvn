@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+JAVA_HOME=$(jenv javahome)
+export JAVA_HOME
+
+if [[ -f mvnw ]]; then
+    exec ./mvnw "$@"
+else
+    readonly project_dir=$PWD
+
+    while [[ ! -f mvnw && "$PWD" != / ]]; do
+        cd .. || break
+    done
+
+    if [[ -f mvnw ]]; then
+        exec ./mvnw --projects "$(realpath --relative-to="$PWD" "$project_dir")" "$@"
+    else
+        cd "$project_dir"
+        exec /usr/local/bin/mvn "$@"
+    fi
+fi

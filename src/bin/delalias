@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+for alias in "$@"; do
+    rm -f "$HOME/dotfiles/alias/$alias"
+done

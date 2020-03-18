@@ -1,0 +1,1 @@
+alias zshplugins='editor ~/dotfiles/.zshplugins && antibody-update'

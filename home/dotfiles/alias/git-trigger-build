@@ -1,0 +1,1 @@
+alias git-trigger-build='git commit --allow-empty -qm "Trigger Build" && git push -qu'

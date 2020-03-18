@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+usage() {
+    cat <<USAGE
+Create global alias.
+
+Usage:
+  setalias [option]… <name> <value>
+  setalias -h | --help
+
+Options:
+  -f --force        overwrite existing alias
+  -h --help         display this help and exit
+  -i --interactive  ask if existing alias should be overwritten
+  -n --no-fail      do not fail if alias exists
+USAGE
+}
+
+force=false
+interactive=false
+fail=true
+
+if (($# > 0)); then
+    while :; do
+        case "$1" in
+        -f | --force)
+            force=true
+            ;;
+        -h | --help)
+            usage
+            exit 0
+            ;;
+        -i | --interactive)
+            interactive=true
+            ;;
+        -n | --no-fail)
+            fail=false
+            ;;
+        *)
+            break
+            ;;
+        esac
+        shift
+    done
+fi
+
+name=${1:?missing required alias name}
+shift
+
+alias="alias $name='$*'"
+file="$HOME/dotfiles/alias/$name"
+
+if ! $SHELL -c "$alias" &>/dev/null; then
+    echo "Alias invalid, creation failed: $alias" >&2
+    exit 1
+fi
+
+if [[ -f "$file" && $force == false ]]; then
+    if [[ $fail == false ]]; then
+        exit 0
+    fi
+
+    if [[ $interactive == true ]]; then
+        read -p "Delete existing alias $name? [yN] " -n 1 -r
+        if [[ "$REPLY" != Y || "$REPLY" != y ]]; then
+            exit 0
+        fi
+    else
+        echo "Alias $name already exists." >&2
+        usage >&2
+        exit 1
+    fi
+fi
+
+echo "$alias" >"$file"

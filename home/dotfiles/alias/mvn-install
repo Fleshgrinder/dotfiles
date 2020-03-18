@@ -1,0 +1,1 @@
+alias mvn-install='mvn clean install -DskipTests'

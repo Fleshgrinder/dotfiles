@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+mkdir -p ~/.config/nanorc
+git clone https://github.com/scopatz/nanorc.git ~/.config/nanorc
+
+ln -fs ~/dotfiles/.nanorc ~/.nanorc

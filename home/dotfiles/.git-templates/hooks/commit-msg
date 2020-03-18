@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+info() { echo -e "\033[0;32m$*\033[0m" >&2; }
+comment() { echo -e "\033[0;33m$*\033[0m" >&2; }
+error() { echo -e "\033[37;41m$*\033[0m" >&2; }
+
+if (($# != 1)); then
+    error 'Missing required commit file path argument.'
+    exit 1
+fi
+
+if ! git remote get-url origin | grep -q "github.com[:/]$GITHUB_ORG/"; then
+    info "Not a $GITHUB_ORG repository, skipping…"
+    exit 0
+fi
+
+if ! branch=$(git branch --show-current) || [[ "$branch" == '' ]]; then
+    if ! branch=$(git branch --list | grep '^\*' | grep -o 'rebasing .*' | cut -d' ' -f2 | cut -d')' -f1) || [[ "$branch" == '' ]]; then
+        error 'Could not retrieve branch name, aborting…'
+        exit 1
+    fi
+fi
+
+if ! ticket=$(grep -Eo '^[A-Z][A-Z0-9]*-[1-9][0-9]*' <<<"$branch"); then
+    error "Could not find Jira ticket in the branch name: $branch"
+    info "Rename the branch to include it, e.g. \`git branch -m FOO-1234-$branch\`"
+    exit 1
+fi
+
+if grep -Eo "^\[$ticket\] " "$1"; then
+    info "Jira ticket [$ticket] already in commit message."
+else
+    echo "[$ticket] $(cat "$1")
+
+https://$GITHUB_ORG_JIRA_HOST/browse/$ticket" >"$1"
+    comment "Added Jira ticket [$ticket] to commit message."
+fi

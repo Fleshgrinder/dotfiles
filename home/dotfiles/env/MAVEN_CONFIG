@@ -1,0 +1,1 @@
+MAVEN_CONFIG='--batch-mode -Djansi.force=true -Dstyle.color=always --strict-checksums -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn'

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+mkdir -p "$GITHUB_USER_DIR"
+
+for project in "$@"; do
+    git clone "git@github.com:$GITHUB_USER/$project.git" "$GITHUB_USER_DIR/$project"
+done

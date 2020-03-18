@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+antibody bundle <~/dotfiles/.zshplugins >~/.zshplugins
