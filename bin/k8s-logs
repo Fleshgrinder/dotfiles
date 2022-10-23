@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+readonly name=${1:?missing required <name> argument}
+readonly ns=${2:-scm}
+
+kubectl get pods -n "$ns" | grep "$name"
+
+kubectl get pods -n scm|grep actual-inbounds-staging
+kubectl logs cif-fcms-gb-actual-inbounds-staging-app-56d4866b9c-s8m98 -n scm cif-fcms-gb-actual-inbounds-app

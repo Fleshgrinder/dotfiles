@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+readonly prefix=${1:?missing required <prefix> argument}
+readonly namespace=${2:-scm}
+
+jobs="$(kubectl get jobs -n "$namespace")"
+printf '\033[30;47m %s \033[0m\n' "$(head -n1 <<<"$jobs")"
+grep -F "$prefix" <<<"$jobs" | xargs -d$'\n' printf ' %s \n'

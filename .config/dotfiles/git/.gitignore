@@ -1,0 +1,9 @@
+# Personal
+.fleshgrinder/
+
+# Mac OS
+.DS_Store
+
+# Windows
+[Dd]esktop.ini
+[Tt]humbs.db

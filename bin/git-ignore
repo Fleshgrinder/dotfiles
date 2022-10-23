@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+if (($# < 1)); then
+    echo 'Missing required <pattern> argument(s).' >&2
+    exit 1
+fi
+
+if [[ ! -d .git ]]; then
+    echo 'Current directory is not a git repository.' >&2
+    exit 1
+fi
+
+readonly d=.git/info
+readonly f=$d/exclude
+
+[[ -d $d ]] || mkdir $d
+[[ -f $f ]] || touch $f
+grep -qxF "$*" $f || echo "$*" >>$f

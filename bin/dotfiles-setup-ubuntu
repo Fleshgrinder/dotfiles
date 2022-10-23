@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
+
+export CARGO_HOME="$XDG_CONFIG_HOME/cargo"
+export JENV_HOME="$XDG_CONFIG_HOME/jenv"
+export RUSTUP_HOME="$XDG_CONFIG_HOME/rustup"
+export SDKMAN_DIR="$XDG_CONFIG_HOME/sdkman"
+
+export PATH="/usr/local/bin:/usr/bin:/bin:$CARGO_HOME/bin:$JENV_HOME/bin:$SDKMAN_DIR/bin"
+
+if ((EUID != 0)); then
+    echo 'This script must be executed with superuser privileges (e.g. sudo).' >&2
+    exit 1
+fi
+
+apt update
+apt upgrade --yes
+apt auto-remove --yes
+
+cmd-exists() {
+    command -v "$1" &>/dev/null
+}
+
+if ! cmd-exists jenv; then
+    git clone https://github.com/jenv/jenv.git "$JENV_HOME"
+    eval "$(jenv init -)"
+fi
+
+if ! cmd-exists sdk; then
+    curl --proto '=https' --tlsv1.2 -sSf "https://get.sdkman.io?rcupdate=false" | bash
+    set +Eeuo pipefail
+    # shellcheck disable=SC1090
+    source "$SDKMAN_DIR/bin/sdkman-init.sh"
+    set -Eeuo pipefail
+fi
+
+if ! cmd-exists cargo; then
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+fi
+
+# https://github.com/cli/cli
+if ! cmd-exists gh; then
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
+    apt-add-repository -u https://cli.github.com/packages
+    apt update
+    apt install gh
+fi

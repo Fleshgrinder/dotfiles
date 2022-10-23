@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+if [[ "$(pwd -P)" =~ ^/mnt/./ ]]; then
+    exec "${GIT_EXE_PATH:-/mnt/c/Program\ Files/Git/cmd}/git.exe" "$@"
+else
+    exec "${GIT_BIN_PATH:-/usr/bin}/git" "$@"
+fi

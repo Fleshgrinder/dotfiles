@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+git checkout master
+git branch | grep -Ev '(^\*|master)' | xargs -r git branch -D
+git remote prune origin

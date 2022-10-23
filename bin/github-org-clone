@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+git -C "$GITHUB_DIR" clone "git@github.com:$GITHUB_ORGANIZATION/${1:?missing required <repository> argument}.git"

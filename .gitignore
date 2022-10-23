@@ -1,0 +1,39 @@
+# ignore everything
+/*
+
+# custom configuration
+!.config/
+.config/*
+!.config/dotfiles/
+
+# custom executables
+!bin/
+
+# Bash configuration files
+!.bash_profile
+!.bashrc
+
+# Git configuration
+!.gitconfig
+
+# GPG configuration
+!.gnupg/
+.gnupg/*
+!.gnupg/gpg.conf
+
+# SSH configuration
+!.ssh/
+.ssh/*
+!.ssh/config
+
+# Z shell configuration files
+!.zprofile
+!.zshenv
+!.zshrc
+
+# metafiles of the repository
+!.editorconfig
+!.gitattributes
+!.gitignore
+!README.md
+!UNLICENSE

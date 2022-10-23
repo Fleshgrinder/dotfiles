@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+if command -v jenv &>/dev/null; then
+    JAVA_HOME=$(jenv javahome)
+    export JAVA_HOME
+fi
+
+if [[ -x gradlew ]]; then
+    exec ./gradlew "$@"
+else
+    readonly cwd=$PWD
+
+    while [[ ! -x gradlew && "$PWD" != / ]]; do
+        cd .. || break
+    done
+
+    if [[ -x gradlew ]]; then
+        exec ./gradlew --project-dir="$cwd" "$@"
+    elif gradle=$(PATH="${GRADLE_HOME:-/opt/gradle}/bin/gradle:${SDKMAN_CANDIDATES_DIR:-}/gradle/current/bin:/usr/local/bin:/usr/bin" command -v gradle); then
+        cd "$cwd"
+        exec "$gradle" "$@"
+    else
+        echo 'Could not find gradle in your PATH, make sure it is available.' >&2
+        exit 1
+    fi
+fi

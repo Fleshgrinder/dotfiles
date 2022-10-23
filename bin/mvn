@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+if command -v jenv &>/dev/null; then
+    JAVA_HOME=$(jenv javahome)
+    export JAVA_HOME
+fi
+
+if [[ -x mvnw ]]; then
+    exec ./mvnw "$@"
+else
+    readonly cwd=$PWD
+
+    while [[ ! -f mvnw && "$PWD" != / ]]; do
+        cd .. || break
+    done
+
+    if [[ -x mvnw ]]; then
+        exec ./mvnw --projects "$(realpath --relative-to="$PWD" "$cwd")" "$@"
+    elif mvn=$(PATH="${MAVEN_HOME:-/opt/maven}/bin/mvn:${SDKMAN_CANDIDATES_DIR:-}/maven/current/bin:/usr/local/bin:/usr/bin" command -v mvn); then
+        cd "$cwd"
+        exec "$mvn" "$@"
+    else
+        echo 'Could not find mvn in your PATH, make sure it is available.' >&2
+        exit 1
+    fi
+fi

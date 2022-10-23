@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+team=${1:?missing required <team> argument}
+
+fly -t "$team" login --concourse-url https://ci.hellofresh.io --open-browser --team-name "$team"
+fly -t "$team" check-resource -r "$(basename "$PWD")"/after-midnight --from "time:2020-09-09T05:00:05Z"

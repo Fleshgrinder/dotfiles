@@ -1,0 +1,57 @@
+[alias]
+    exec = update-index --chmod=+x
+    sweep = "!f() { git branch | grep -vE '(master|main|\\*)' | xargs -rl git branch -D; }; f"
+
+[checkout]
+    workers = 0
+
+[commit]
+    gpgSign = true
+
+[core]
+    attributesFile = ~/.config/dotfiles/git/.gitattributes
+    autocrlf = input
+    checkStat = minimal
+    eol = lf
+    excludesFile = ~/.config/dotfiles/git/.gitignore
+    ignoreCase = false
+    precomposeUnicode = true
+    preloadIndex = true
+    symlinks = true
+    trustctime = false
+    untrackedCache = true
+
+[fetch]
+    parallel = 0
+    prune = true
+    pruneTags = true
+
+[grep]
+    threads = 0
+
+[pull]
+    ff = only
+
+[push]
+    default = current
+
+[remote "origin"]
+    parallel = 0
+    prune = true
+    pruneTags = true
+
+[remote "upstream"]
+    parallel = 0
+    prune = true
+    pruneTags = true
+
+[tag]
+    gpgSign = true
+
+[user]
+    name = Fleshgrinder
+    email = fleshgrinder@users.noreply.github.com
+    signingKey = 7366AE4A67748172
+
+[includeIf "gitdir:?:/**"]
+    path = ~/.config/dotfiles/git/windows/.gitconfig
